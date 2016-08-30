@@ -27,6 +27,8 @@ var descricaoNome = "";
 var final = "";
 var finalContraIndicacao = "";
 
+var port = process.env.PORT || 8000
+
 
 app.post("/remedio", jsonParser, (function (req, res2) {
 	
@@ -178,6 +180,8 @@ app.post("/remedio", jsonParser, (function (req, res2) {
 
 	}));
 
-app.listen(process.env.PORT || 3000);
+app.listen(port, function (argument) {
+	console.log("App is running " + port)
+});
 
 console.log("Server runnig....");
