@@ -54,31 +54,10 @@ app.post("/remedio", jsonParser, (function (req, res2) {
 	res.on("end", function() {
 		
 		
-		//indexNome = responseBody.toString().indexOf("Medicamento");
 		indexApresentacao = responseBody.toString().indexOf("class=\"TituloBula\" title=\"Apresentação")
 		indexPosologia = responseBody.toString().indexOf("class=\"TituloBula\" title=\"Posologia");
 		indexIndicacao = responseBody.toString().indexOf("class=\"TituloBula\" title=\"Indi");
 		indexContraIndicacao = responseBody.toString().indexOf("class=\"TituloBula\" title=\"Contra");
-
-		//if (indexNome  !== -1) {
-		
-				
-		//	while(descricaoNome.toString().indexOf("-") === -1){
-			
-		//	descricaoNome = descricaoNome.concat(responseBody.toString().charAt(indexNome).toString());
-		//	indexNome++;
-			
-		//	}
-
-		//	var finalNome = descricaoNome.replace("Medicamento", "");
-			
-		//	jsonSaida.nome = finalNome.replace("-", "").trim();
-			
-			
-		//}else{
-		//	console.log(indexPosologia);
-		//}
-
 
 		jsonSaida.nome = req.body.path;
 
@@ -95,10 +74,10 @@ app.post("/remedio", jsonParser, (function (req, res2) {
 			final = descricao.split("</div>")[1];
 			var final2 = final.split("<div")[0];
 			jsonSaida.posologia = final2.stripHTML().trim();
-			//console.log(final2);
+			
 			
 		}else{
-			//console.log(indexPosologia);
+			
 			jsonSaida.posologia = "not found";
 		}
 
