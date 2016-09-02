@@ -9,14 +9,9 @@ var app = express();
 
 var jsonParser = bodyParser.json()
 
-var jsonSaida = {
-	nome: "",
-	apresentacao: "",
-	posologia : "",
-	indicacao : "",
-	contraIndicacao :"",
-	preco: ""
-}
+
+
+
 
 String.prototype.stripHTML = function() {return this.replace(/<.*?>/g, '');}
 
@@ -34,7 +29,13 @@ var port = process.env.PORT || 8000
 
 app.post("/remedio", jsonParser, (function (req, res2) {
 
-
+var jsonSaida = {
+	nome: "",
+	apresentacao: "",
+	posologia : "",
+	indicacao : "",
+	contraIndicacao :"",
+}
 
 
 var path = req.body.path;
@@ -141,11 +142,14 @@ var path = req.body.path;
 			var final = finalApresentacao2.replace("</strong>", "")
 			jsonSaida.apresentacao = final.stripHTML().trim();
 			
+			
 						
 		}else{
 			
 			jsonSaida.apresentacao = "not found"
 		}
+
+		res2.send(jsonSaida);
 
 		});
 
@@ -160,7 +164,12 @@ var path = req.body.path;
 
 }));	
 
+
 app.post("/remedio/preco", jsonParser, (function (req, res2) {
+
+	var jsonPreco ={
+		preco: ""
+	}
 		
 		var reqGetPreco = http.request("http://www.drogariasaopaulo.com.br/"+req.body.path.replace("_","%20")+"?&utmi_p=_&utmi_pc=BuscaFullText&utmi_cp="+req.body.path.replace("_","%20"), function (res3) {
 
@@ -189,15 +198,15 @@ app.post("/remedio/preco", jsonParser, (function (req, res2) {
 						}
 
 						var precoDesc2 = precoDesc.split("\"the-price\">")[1];
-						jsonSaida.preco = precoDesc2.split("<")[0];
+						jsonPreco.preco = precoDesc2.split("<")[0];
 
-						res2.send(jsonSaida);
+						
 
 				}else{
-					jsonSaida.preco = "not found";
+					jsonPreco.preco = "not found";
 				}
 				
-
+					res2.send(jsonPreco);
 				
 			});
 
