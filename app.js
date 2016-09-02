@@ -156,7 +156,7 @@ var path = req.body.path;
 
 		buscaPreco = req.body.path.replace("_","%20")
 		
-		var reqGetPreco = http.request("http://www.drogariasaopaulo.com.br/"+buscaPreco"?&utmi_p=_&utmi_pc=BuscaFullText&utmi_cp="+buscaPreco, function (res3) {
+		var reqGetPreco = http.request("http://www.drogariasaopaulo.com.br/"+buscaPreco+"?&utmi_p=_&utmi_pc=BuscaFullText&utmi_cp="+buscaPreco, function (res3) {
 
 			var responseBody = ""
 			res3.setEncoding("UTF-8");
