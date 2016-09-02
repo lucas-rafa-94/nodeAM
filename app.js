@@ -3,6 +3,8 @@ var http = require("http")
 var express = require ("express");
 var bodyParser = require ("body-parser");
 
+var buscaPreco = "";
+
 var app = express();
 
 var jsonParser = bodyParser.json()
@@ -32,7 +34,7 @@ var port = process.env.PORT || 8000
 
 app.post("/remedio", jsonParser, (function (req, res2) {
 	
-	
+var path = req.body.path;
 	
 	var reqGet = http.request("http://www.consultamedicamentos.com.br/bula/"+req.body.path, function(res) {
 	
@@ -54,10 +56,10 @@ app.post("/remedio", jsonParser, (function (req, res2) {
 	res.on("end", function() {
 		
 		
-		indexApresentacao = responseBody.toString().indexOf("class=\"TituloBula\" title=\"Apresentação")
-		indexPosologia = responseBody.toString().indexOf("class=\"TituloBula\" title=\"Posologia");
-		indexIndicacao = responseBody.toString().indexOf("class=\"TituloBula\" title=\"Indi");
-		indexContraIndicacao = responseBody.toString().indexOf("class=\"TituloBula\" title=\"Contra");
+		var indexApresentacao = responseBody.toString().indexOf("class=\"TituloBula\" title=\"Apresentação")
+		var indexPosologia = responseBody.toString().indexOf("class=\"TituloBula\" title=\"Posologia");
+		var indexIndicacao = responseBody.toString().indexOf("class=\"TituloBula\" title=\"Indi");
+		var indexContraIndicacao = responseBody.toString().indexOf("class=\"TituloBula\" title=\"Contra");
 
 		jsonSaida.nome = req.body.path;
 
@@ -98,8 +100,9 @@ app.post("/remedio", jsonParser, (function (req, res2) {
 			
 			
 		}else{
-		//console.log(indexIndicacao);
+		
 		jsonSaida.indicacao = "not found";
+
 		}
 
 		if(indexContraIndicacao !== -1){
@@ -135,30 +138,77 @@ app.post("/remedio", jsonParser, (function (req, res2) {
 			var final = finalApresentacao2.replace("</strong>", "")
 			jsonSaida.apresentacao = final.stripHTML().trim();
 			
-			//res2.send(jsonSaida);
-			
+						
 		}else{
-			//console.log(indexApresentacao);
+			
 			jsonSaida.apresentacao = "not found"
 		}
 
-		res2.send(jsonSaida);
-
 		});
-	});
 
-
-
-	req.on("error", function(err) {
-	console.log(`problem with request: ${err.message}`);
-	});
-
-	reqGet.end();
-
+		req.on("error", function(err) {
+		console.log(`problem with request: ${err.message}`);
+		});
 	
+});
 
-	}));
+		reqGet.end();
 
+		buscaPreco = req.body.path.replace("_","%20")
+		
+		var reqGetPreco = http.request("http://www.drogariasaopaulo.com.br/dipirona%20sodica?&utmi_p=_dipirona+sodica+do+bem&utmi_pc=BuscaFullText&utmi_cp="+buscaPreco, function (res3) {
+
+			var responseBody = ""
+			res3.setEncoding("UTF-8");
+
+			res3.once("data", function(chunk) {
+				
+			});
+
+			res3.on("data", function(chunk) {
+			responseBody += chunk;
+			});
+
+			res3.on("end", function() {
+				
+				var indexPreco = responseBody.toString().indexOf("bestPrice transition_all");
+				var texto = responseBody.toString();
+				var precoDesc = "";
+				
+				if(indexPreco !== -1){
+
+						while(precoDesc.toString().indexOf("pbm-discount") === -1){
+							precoDesc = precoDesc.concat(responseBody.toString().charAt(indexPreco).toString());
+							indexPreco++;
+						}
+
+						var precoDesc2 = precoDesc.split("\"the-price\">")[1];
+						jsonSaida.preco = precoDesc2.split("<")[0];
+
+						res2.send(jsonSaida);
+
+				}else{
+					jsonSaida.preco = "not found";
+				}
+				
+
+				
+			});
+
+			
+			req.on("error", function(err) {
+			console.log(`problem with request: ${err.message}`);
+			});
+
+			
+		});
+
+		reqGetPreco.end();
+		
+
+}));
+	
+	
 app.listen(port, function (argument) {
 	console.log("App is running " + port)
 });
