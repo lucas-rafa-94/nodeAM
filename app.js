@@ -33,7 +33,10 @@ var port = process.env.PORT || 8000
 
 
 app.post("/remedio", jsonParser, (function (req, res2) {
-	
+
+
+
+
 var path = req.body.path;
 	
 	var reqGet = http.request("http://www.consultamedicamentos.com.br/bula/"+req.body.path, function(res) {
@@ -152,11 +155,14 @@ var path = req.body.path;
 	
 });
 
+
 		reqGet.end();
 
-		buscaPreco = req.body.path.replace("_","%20")
+}));	
+
+app.post("/remedio/preco", jsonParser, (function (req, res2) {
 		
-		var reqGetPreco = http.request("http://www.drogariasaopaulo.com.br/"+buscaPreco+"?&utmi_p=_&utmi_pc=BuscaFullText&utmi_cp="+buscaPreco, function (res3) {
+		var reqGetPreco = http.request("http://www.drogariasaopaulo.com.br/"+req.body.path.replace("_","%20")+"?&utmi_p=_&utmi_pc=BuscaFullText&utmi_cp="+req.body.path.replace("_","%20"), function (res3) {
 
 			var responseBody = ""
 			res3.setEncoding("UTF-8");
