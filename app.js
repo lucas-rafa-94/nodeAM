@@ -222,6 +222,41 @@ app.post("/remedio/preco", jsonParser, (function (req, res2) {
 		
 
 }));
+
+app.post("/updateMedUsur", jsonParser, function(reqMed, resMed){
+
+var responsePut = "";
+
+var options = {
+  "host": "https://9c6cebc2-c237-4588-9c99-6bd8db2231af-bluemix.cloudant.com/lucas/",
+  "path": req.body._id,
+  "method": "PUT",
+  "headers": { 
+      "Content-Type" : "application/json",
+  }
+}
+
+var reqPutMed = https.request(options, function(reqMed, resMed){
+
+		resMed.setEncoding("UTF-8");
+
+		resMed.once("data", function(chunk) {
+		responsePut += chunk;	
+		});
+
+		resMed.on("data", function(chunk) {
+		responsePut += chunk;
+		});
+
+		resMed.on("end", function () {
+		resMed.send(responsePut);
+		});
+
+
+
+	});
+	resMed.end();
+});
 	
 	
 app.listen(port, function (argument) {
