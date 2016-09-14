@@ -2,7 +2,7 @@ var https = require("https");
 var http = require("http")
 var express = require ("express");
 var bodyParser = require ("body-parser");
-
+var request = require("request");
 var buscaPreco = "";
 
 var app = express();
@@ -12,6 +12,8 @@ var jsonParser = bodyParser.json()
 
 
 
+var nano = require('nano')('https://9c6cebc2-c237-4588-9c99-6bd8db2231af-bluemix.cloudant.com/')
+ 
 
 String.prototype.stripHTML = function() {return this.replace(/<.*?>/g, '');}
 
@@ -227,35 +229,16 @@ app.post("/updateMedUsur", jsonParser, function(reqMed, resMed){
 
 var responsePut = "";
 
-var options = {
-  "host": "https://9c6cebc2-c237-4588-9c99-6bd8db2231af-bluemix.cloudant.com/lucas/",
-  "path": req.body._id,
-  "method": "PUT",
-  "headers": { 
-      "Content-Type" : "application/json",
-  }
-}
+var lucas = nano.db.use('lucas');
 
-var reqPutMed = https.request(options, function(reqMed, resMed){
+lucas.insert(reqMed.body, function(err, result) {
+  if (err){throw err};
+    console.log(result);
+	responsePut = result;
+});
 
-		resMed.setEncoding("UTF-8");
+resMed.send(responsePut);
 
-		resMed.once("data", function(chunk) {
-		responsePut += chunk;	
-		});
-
-		resMed.on("data", function(chunk) {
-		responsePut += chunk;
-		});
-
-		resMed.on("end", function () {
-		resMed.send(responsePut);
-		});
-
-
-
-	});
-	resMed.end();
 });
 	
 	
