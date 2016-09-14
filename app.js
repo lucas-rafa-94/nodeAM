@@ -231,9 +231,9 @@ app.post("/updateMedUsur", jsonParser, function(reqMed, resMed){
 
 var lucas = nano.db.use('lucas');
 
-lucas.insert(reqMed.body, function(err, results) {
+lucas.insert(reqMed.body, function(err, result) {
   if (err){throw err};
-    resMed.send(results);
+    resMed.send(result);
 	
 });
 
