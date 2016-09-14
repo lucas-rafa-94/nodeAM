@@ -227,17 +227,18 @@ app.post("/remedio/preco", jsonParser, (function (req, res2) {
 
 app.post("/updateMedUsur", jsonParser, function(reqMed, resMed){
 
-var responsePut = "";
+
 
 var lucas = nano.db.use('lucas');
 
 lucas.insert(reqMed.body, function(err, result) {
   if (err){throw err};
-    console.log(result);
-	responsePut = result;
+    resMed.send(result);
+	
 });
 
-resMed.send(responsePut);
+
+
 
 });
 	
