@@ -10,8 +10,7 @@ var app = express();
 var jsonParser = bodyParser.json()
 
 
-var nano = require('nano')('https://9c6cebc2-c237-4588-9c99-6bd8db2231af-bluemix.cloudant.com/')
- 
+
 
 String.prototype.stripHTML = function() {return this.replace(/<.*?>/g, '');}
 
@@ -224,8 +223,8 @@ app.post("/remedio/preco", jsonParser, (function (req, res2) {
 
 app.post("/updateMedUsur", jsonParser, function(reqMed, resMed){
 
-
-
+var nano = require('nano')('https://9c6cebc2-c237-4588-9c99-6bd8db2231af-bluemix.cloudant.com/')
+ 
 var lucas = nano.db.use('lucas');
 
 lucas.insert(reqMed.body, function(err, result) {
