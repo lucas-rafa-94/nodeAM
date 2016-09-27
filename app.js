@@ -10,8 +10,6 @@ var app = express();
 var jsonParser = bodyParser.json()
 
 
-
-
 var nano = require('nano')('https://9c6cebc2-c237-4588-9c99-6bd8db2231af-bluemix.cloudant.com/')
  
 
@@ -26,7 +24,7 @@ var descricaoNome = "";
 var final = "";
 var finalContraIndicacao = "";
 
-var port = process.env.PORT || 8000
+var port = process.env.PORT || 8000;
 
 
 app.post("/remedio", jsonParser, (function (req, res2) {
@@ -124,7 +122,6 @@ var path = req.body.path;
 				
 
 			}else{
-				//console.log(indexContraIndicacao);
 				jsonSaida.contraIndicacao = "not found"
 			}
 
